@@ -1,0 +1,22 @@
+import java.util.HashMap;
+
+public class GestorAFN {
+    
+    private HashMap<Integer, AFN> mapaAFN;
+
+    public GestorAFN() {
+        this.mapaAFN = new HashMap<>();
+    }
+
+    public void agregarAFN(int id, AFN automata) {
+        mapaAFN.put(id, automata);
+    }
+
+    public AFN obtenerAFN(int id) {
+        return mapaAFN.get(id);
+    }
+
+    public boolean existeAFN(int id) {
+        return mapaAFN.containsKey(id);
+    }
+}
