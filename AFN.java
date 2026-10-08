@@ -1,5 +1,6 @@
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
 
 public class AFN {
 
@@ -150,5 +151,37 @@ public class AFN {
     this.edosAceptacion.add(e2);
 
     return this;
+    }
+
+    public static AFN unirVarios(List<AFN> automatas) {
+        if (automatas == null || automatas.isEmpty()) return null;
+        if (automatas.size() == 1) return automatas.get(0);
+
+        AFN nuevoAfn = new AFN();
+        Estado e1 = new Estado(); // Único estado inicial
+        Estado e2 = new Estado(); // Único estado de aceptación
+        e2.edoAcept = true;
+
+        for (AFN afn : automatas) {
+            // 1. Transición ε desde el estado inicial común al inicio de este AFN
+            e1.transiciones.add(new Transicion(EPSILON, afn.edoIni));
+
+            // 2. Transición ε desde los estados de aceptación de este AFN al nuevo fin común
+            for (Estado edoAcept : afn.edosAceptacion) {
+                edoAcept.transiciones.add(new Transicion(EPSILON, e2));
+                edoAcept.edoAcept = false;
+            }
+
+            // Acumular estados y símbolos
+            nuevoAfn.edosAFN.addAll(afn.edosAFN);
+            nuevoAfn.alfabeto.addAll(afn.alfabeto);
+        }
+
+        nuevoAfn.edosAFN.add(e1);
+        nuevoAfn.edosAFN.add(e2);
+        nuevoAfn.edoIni = e1;
+        nuevoAfn.edosAceptacion.add(e2);
+
+        return nuevoAfn;
 }
 }
